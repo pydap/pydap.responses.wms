@@ -204,7 +204,7 @@ class WMSResponse(BaseResponse):
         dpi = float(environ.get('pydap.responses.wms.dpi', 80))
         w = float(query.get('WIDTH', 256))
         h = float(query.get('HEIGHT', 256))
-        time = query.get('time')
+        time = query.get('TIME')
         figsize = w/dpi, h/dpi
         bbox = [float(v) for v in query.get('BBOX', '-180,-90,180,90').split(',')]
         cmap = query.get('cmap', environ.get('pydap.responses.wms.cmap', 'jet'))
@@ -256,7 +256,7 @@ class WMSResponse(BaseResponse):
                     end = iso8601.parse_date(end, default_timezone=None)
                     l[(values >= start) & (values <= end)] = True
                 else:
-                    instant = iso8601.parse_date(token.strip(), default_timezone=None)
+                    instant = iso8601.parse_date(token.strip().rstrip('Z'), default_timezone=None)
                     l[values == instant] = True
         else:
             l = None
