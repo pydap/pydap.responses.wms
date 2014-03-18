@@ -235,7 +235,7 @@ class WMSResponse(BaseResponse):
             canvas = FigureCanvas(fig)
             output = StringIO() 
             # Optionally convert to paletted png
-            paletted = bool(environ.get('pydap.responses.wms.paletted', False))
+            paletted = asbool(environ.get('pydap.responses.wms.paletted', 'false'))
             if paletted:
                 # Read image
                 buf, size = canvas.print_to_buffer()
