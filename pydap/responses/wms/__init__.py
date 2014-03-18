@@ -242,18 +242,22 @@ class WMSResponse(BaseResponse):
                 im = Image.frombuffer('RGBA', size, buf, 'raw', 'RGBA', 0, 1)
                 # Find number of colors
                 ncolors = len(im.getcolors())
-                # Get alpha band
-                alpha = im.split()[-1]
-                # Convert to paletted image
-                im = im.convert("RGB")
-                im = im.convert("P", palette=Image.ADAPTIVE, colors=ncolors)
-                # Set all pixel values below ncolors to 1 and the rest to 0
-                mask = Image.eval(alpha, lambda a: 255 if a <=128 else 0)
-                # Paste the color of index ncolors and use alpha as a mask
-                im.paste(ncolors, mask)
-                # Truncate palette to actual size to save space
-                im.palette.palette = im.palette.palette[:3*(ncolors+1)]
-                im.save(output, 'png', optimize=False, transparency=ncolors)
+                # Only convert if the number of colors is less than 256
+                if ncolors <= 256:
+                    # Get alpha band
+                    alpha = im.split()[-1]
+                    # Convert to paletted image
+                    im = im.convert("RGB")
+                    im = im.convert("P", palette=Image.ADAPTIVE, colors=ncolors)
+                    # Set all pixel values below ncolors to 1 and the rest to 0
+                    mask = Image.eval(alpha, lambda a: 255 if a <=128 else 0)
+                    # Paste the color of index ncolors and use alpha as a mask
+                    im.paste(ncolors, mask)
+                    # Truncate palette to actual size to save space
+                    im.palette.palette = im.palette.palette[:3*(ncolors+1)]
+                    im.save(output, 'png', optimize=False, transparency=ncolors)
+                else:
+                    canvas.print_png(output)
             else:
                 canvas.print_png(output)
             if hasattr(dataset, 'close'): dataset.close()
