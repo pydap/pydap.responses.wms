@@ -22,7 +22,7 @@ import coards
 try:
     from PIL import Image
 except:
-    pass
+    PIL = None
 
 from pydap.model import *
 from pydap.responses.lib import BaseResponse
@@ -244,9 +244,10 @@ class WMSResponse(BaseResponse):
                 buf, size = canvas.print_to_buffer()
                 im = Image.frombuffer('RGBA', size, buf, 'raw', 'RGBA', 0, 1)
                 # Find number of colors
-                ncolors = len(im.getcolors())
+                colors = im.getcolors(256)
                 # Only convert if the number of colors is less than 256
-                if ncolors <= 256:
+                if colors is not None:
+                    ncolors = len(colors)
                     # Get alpha band
                     alpha = im.split()[-1]
                     # Convert to paletted image
