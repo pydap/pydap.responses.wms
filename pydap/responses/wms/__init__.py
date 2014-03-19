@@ -19,7 +19,10 @@ rcParams['xtick.labelsize'] = 'small'
 rcParams['ytick.labelsize'] = 'small'
 import iso8601
 import coards
-from PIL import Image
+try:
+    from PIL import Image
+except:
+    pass
 
 from pydap.model import *
 from pydap.responses.lib import BaseResponse
