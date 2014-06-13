@@ -56,6 +56,7 @@ scratch. This response enables Pydap to serve data as a WMS server.
             'matplotlib',
             'coards',
             'iso8601',
+            'Pillow',
         ],
         entry_points="""
             [pydap.response]
